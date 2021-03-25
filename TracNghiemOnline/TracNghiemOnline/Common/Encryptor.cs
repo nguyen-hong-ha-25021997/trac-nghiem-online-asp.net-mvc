@@ -9,14 +9,15 @@ namespace TracNghiemOnline.Common
 {
     public class Encryptor
     {
+        // dùng để mã hóa
         public static string MD5Hash(string text)
         {
             MD5 md5 = new MD5CryptoServiceProvider();
 
-            //compute hash from the bytes of text  
+            //hàm băm  
             md5.ComputeHash(ASCIIEncoding.ASCII.GetBytes(text));
 
-            //get hash result after compute it  
+            //lấy kết quả băm 
             byte[] result = md5.Hash;
 
             StringBuilder strBuilder = new StringBuilder();

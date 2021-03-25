@@ -23,6 +23,50 @@ namespace TracNghiemOnline.Models
             update.last_seen_url = url;
             db.SaveChanges();
         }
+        public bool EditStudent(int id_student, string name, string username, string password, string gender, string email, string birthday, int id_speciality, int id_class)
+        {
+            try
+            {
+                var update = (from x in db.students where x.id_student == id_student select x).Single();
+                update.name = name;
+                update.username = username;
+                update.email = email;
+                update.gender = gender;
+                update.id_speciality = id_speciality;
+                update.id_class = id_class;
+                update.birthday = Convert.ToDateTime(birthday);
+                if (password != null)
+                    update.password = Common.Encryptor.MD5Hash(password);
+                db.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
+            return true;
+        }
+        public student GetStudent(int id)
+        {
+            student student = new student();
+            try
+            {
+                student = db.students.SingleOrDefault(x => x.id_student == id);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            return student;
+        }
+        public List<@class> GetClasses()
+        {
+            return db.classes.ToList();
+        }
+        public List<speciality> GetSpecialities()
+        {
+            return db.specialities.ToList();
+        }
         public List<TestViewModel> GetDashboard()
         {
             List<TestViewModel> tests = (from x in db.tests
