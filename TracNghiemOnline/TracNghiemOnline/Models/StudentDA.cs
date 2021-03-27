@@ -23,50 +23,6 @@ namespace TracNghiemOnline.Models
             update.last_seen_url = url;
             db.SaveChanges();
         }
-        public bool EditStudent(int id_student, string name, string username, string password, string gender, string email, string birthday, int id_speciality, int id_class)
-        {
-            try
-            {
-                var update = (from x in db.students where x.id_student == id_student select x).Single();
-                update.name = name;
-                update.username = username;
-                update.email = email;
-                update.gender = gender;
-                update.id_speciality = id_speciality;
-                update.id_class = id_class;
-                update.birthday = Convert.ToDateTime(birthday);
-                if (password != null)
-                    update.password = Common.Encryptor.MD5Hash(password);
-                db.SaveChanges();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                return false;
-            }
-            return true;
-        }
-        public student GetStudent(int id)
-        {
-            student student = new student();
-            try
-            {
-                student = db.students.SingleOrDefault(x => x.id_student == id);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-            return student;
-        }
-        public List<@class> GetClasses()
-        {
-            return db.classes.ToList();
-        }
-        public List<speciality> GetSpecialities()
-        {
-            return db.specialities.ToList();
-        }
         public List<TestViewModel> GetDashboard()
         {
             List<TestViewModel> tests = (from x in db.tests
@@ -75,7 +31,7 @@ namespace TracNghiemOnline.Models
                                          select new TestViewModel { test = x, subject = s, status = stt }).ToList();
             return tests;
         }
-        public test GetTest(int test_code)
+        public test GetTest(int test_code)                                                  // lấy bài thi
         {
             test test = new test();
             try
@@ -101,18 +57,20 @@ namespace TracNghiemOnline.Models
             user.TIME = time_remaining;
         }
 
-        public void CreateStudentQuestion(int code)
+        public void CreateStudentQuestion(int code)                                        // tạo 1 câu hỏi cho học sinh
         {
-            List<quests_of_test> qs = (from x in db.quests_of_test
+            List<quests_of_test> qs = (from x in db.quests_of_test                         // lấy các ra câu hỏi của bài thi theo mã bài thi
                                        where x.test_code == code
                                        select x).OrderBy(x => Guid.NewGuid()).ToList();
-            foreach(var item in qs)
+            foreach(var item in qs)                                                        // với mỗi câu hỏi truyền vào ai làm và đáp án
             {
+                // truyền vào các thông tin
                 var StudentTest = new student_test_detail();
-                StudentTest.id_question = item.id_question;
-                StudentTest.test_code = code;
-                StudentTest.id_student = user.ID;
+                StudentTest.id_question = item.id_question;                                // mã câu hỏi
+                StudentTest.test_code = code;                                              // mã bài thi
+                StudentTest.id_student = user.ID;                                          // mã học sinh làm
                 question q = db.questions.SingleOrDefault(x => x.id_question == item.id_question);
+                // truyền vào các lựa chọn của đáp án
                 string[] answer = {q.answer_a, q.answer_b, q.answer_c, q.answer_d};
                 answer = ShuffleArray.Randomize(answer);
                 StudentTest.answer_a = answer[0];
@@ -124,7 +82,7 @@ namespace TracNghiemOnline.Models
             }
 
         }
-        public List<StudentQuestViewModel> GetListQuest(int test_code)
+        public List<StudentQuestViewModel> GetListQuest(int test_code)                      // lấy danh sách câu hỏi của bài thi đc chọn
         {
             List<StudentQuestViewModel> list = new List<StudentQuestViewModel>();
             try
@@ -138,7 +96,7 @@ namespace TracNghiemOnline.Models
             } catch(Exception) { }
             return list;
         }
-        public void UpdateTiming(string time)
+        public void UpdateTiming(string time)                                           // cập nhật thời gian (để lấy thời gian online)
         {
             var update = (from x in db.students where x.id_student == user.ID select x).Single();
             update.time_remaining = time;
@@ -146,13 +104,13 @@ namespace TracNghiemOnline.Models
             user.TIME = time;
             db.SaveChanges();
         }
-        public void UpdateStudentTest(int id_question, string answer)
+        public void UpdateStudentTest(int id_question, string answer)                   // cập nhật câu trả lời
         {
             var update = (from x in db.student_test_detail where x.id_student == user.ID && x.test_code == user.TESTCODE && x.id_question == id_question select x).Single();
             update.student_answer = answer;
             db.SaveChanges();
         }
-        public void InsertScore(double score, string detail)
+        public void InsertScore(double score, string detail)                                            // lưu điểm
         {
             var s = new score();
             s.id_student = user.ID;
@@ -160,10 +118,10 @@ namespace TracNghiemOnline.Models
             s.score_number = score;
             s.detail = detail;
             s.time_finish = DateTime.Now;
-            db.scores.Add(s);
-            db.SaveChanges();
+            db.scores.Add(s);                                                                           // thêm bản ghi vào CSDL
+            db.SaveChanges();                                                                           // lưu
         }
-        public void FinishTest()
+        public void FinishTest()                                                 // sau khi kết thúc bài thi làm mới lại thông tin
         {
             var update = (from x in db.students where x.id_student == user.ID select x).Single();
             update.is_testing = null;
@@ -175,7 +133,7 @@ namespace TracNghiemOnline.Models
             HttpContext.Current.Session[UserSession.TIME] = null;
             user.TIME = null;
         }
-        public score GetScore(int test_code)
+        public score GetScore(int test_code)                                        // lấy điểm của bài thi đc chọn
         {
             score score = new score();
             try
@@ -188,7 +146,7 @@ namespace TracNghiemOnline.Models
             }
             return score;
         }
-        public List<int> GetStudentTestcode()
+        public List<int> GetStudentTestcode()                                                       // lấy danh sách các bài thi
         {
             List<int> score = new List<int>();
             try

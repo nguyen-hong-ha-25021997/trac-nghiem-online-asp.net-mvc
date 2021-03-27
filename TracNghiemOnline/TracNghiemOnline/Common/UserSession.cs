@@ -6,7 +6,7 @@ using System.Web;
 namespace TracNghiemOnline.Common
 {
     public static class UserSession
-    {   // dữ liệu phiên đăng nhập
+    {
         public static string ISLOGIN = "ISLOGIN";
         public static string ID = "ID";
         public static string PERMISSION = "PERMISSION";

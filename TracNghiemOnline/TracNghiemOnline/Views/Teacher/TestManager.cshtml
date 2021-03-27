@@ -1,7 +1,7 @@
 ﻿@using TracNghiemOnline.Models
 @{
     ViewBag.Title = "Quản Lý Bài Thi";
-    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    Layout = "~/Views/Shared/_Layout.cshtml";
     var List = Model as List<TestViewModel>;
     var ListSubject = ViewBag.ListSubject;
 }
@@ -61,7 +61,7 @@
             </ul>
         </div>
         <div id="add_normal" class="col s12">
-            @using (Html.BeginForm("AddTest", "Admin", FormMethod.Post))
+            @using (Html.BeginForm("AddTest", "Teacher", FormMethod.Post))
             {
                 <div class="input-field">
                     <label for="email">Tên <span class="failed">(*)</span></label>

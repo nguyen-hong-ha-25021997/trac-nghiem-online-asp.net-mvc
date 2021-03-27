@@ -1,5 +1,6 @@
 ﻿@using TracNghiemOnline.Common
 @{
+    ViewBag.copyright = "Copyright 2018 by Dzu";
     ViewBag.name = "Hệ Thống Trắc Nghiệm Online";
 }
 <!DOCTYPE html>
@@ -26,11 +27,12 @@
                 <a href="/" class="brand-logo cursor left"><i class="material-icons">home</i></a>
                 <div class="right">
                     <span class="title">Xin chào: @Session[UserSession.NAME]</span>
+                    <!-- Dropdown Trigger -->
                     <a class='dropdown-trigger btn-menu' href='#' data-target='dropdown-menu'>Chức Năng<span class="material-icons">arrow_drop_down</span></a>
 
                     <!-- Dropdown Structure -->
                     <ul id='dropdown-menu' class='dropdown-content'>
-                        @if (@Session[UserSession.PERMISSION].ToString() == "2")
+                        @if ((Session[UserSession.PERMISSION]).Equals(2))
                         {
                             <li><a href="@Url.Action("EditTeacher")"><i class="material-icons">assignment_ind</i>Thông tin cá nhân</a></li>
                             <li><a href="@Url.Action("QuestionManager")"><i class="material-icons">format_align_left</i>Quản Lý Câu Hỏi</a></li>
@@ -38,7 +40,7 @@
                         }
                         else
                         {
-                            <li><a href="@Url.Action("EditStudent")"><i class="material-icons">assignment_ind</i>Thông tin cá nhân</a></li>
+                            <li><a href="@Url.Action("EditStudent")"><i class="material-icons">group</i>Thông tin cá nhân</a></li>
                         }
                         <li class="divider" tabindex="-1"></li>
                         <li><a href="@Url.Action("Logout")">Đăng xuất<i class="material-icons">close</i></a></li>

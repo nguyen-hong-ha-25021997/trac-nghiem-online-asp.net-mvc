@@ -14,13 +14,14 @@ namespace TracNghiemOnline.Models
         [Display(Name = "Mật Khẩu")]
         public string Password { get; set; }
 
-        public bool IsValid(LoginModel model)
+        public bool IsValid(LoginModel model)                                           // ktra đăng nhập
         {
             //admin admin = db.admins.First(x => x.username == model.Username);
 
-            model.Password = Common.Encryptor.MD5Hash(model.Password);
+            model.Password = Common.Encryptor.MD5Hash(model.Password);                  // mã hóa mk đã nhập
             try
             {
+                // ktra với tk và mk đã nhập có tài khoản admin nào đúng không
                 if (Convert.ToBoolean(db.admins.First(x => x.username == model.Username && x.password == model.Password).id_admin))
                 {
                     SetAdminSession(db.admins.First(x => x.username == model.Username && x.password == model.Password).id_admin);
@@ -29,6 +30,7 @@ namespace TracNghiemOnline.Models
             } catch(Exception){}
             try
             {
+                // ktra với tk và mk đã nhập có tài khoản giáo viên nào đúng không
                 if (Convert.ToBoolean(db.teachers.First(x => x.username == model.Username && x.password == model.Password).id_teacher))
                 {
                     SetTeacherSession(db.teachers.First(x => x.username == model.Username && x.password == model.Password).id_teacher);
@@ -37,6 +39,7 @@ namespace TracNghiemOnline.Models
             } catch (Exception) { }
             try
             {
+                // ktra với tk và mk đã nhập có tài khoản học sinh nào đúng không
                 if (Convert.ToBoolean(db.students.First(x => x.username == model.Username && x.password == model.Password).id_student))
                 {
                     SetStudentSession(db.students.First(x => x.username == model.Username && x.password == model.Password).id_student);

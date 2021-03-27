@@ -370,10 +370,11 @@
     <Content Include="Scripts\popper.js.map" />
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
+    <Content Include="Views\Teacher\EditQuestion.cshtml" />
+    <Content Include="Views\Teacher\EditTeacher.cshtml" />
+    <Content Include="Views\Teacher\EditTest.cshtml" />
     <Content Include="Views\Teacher\QuestionManager.cshtml" />
     <Content Include="Views\Teacher\TestManager.cshtml" />
-    <Content Include="Views\Teacher\EditTeacher.cshtml" />
-    <Content Include="Views\Student\EditStudent.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

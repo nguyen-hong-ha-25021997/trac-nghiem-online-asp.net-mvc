@@ -7,7 +7,6 @@ namespace TracNghiemOnline.Common
 {
     public class User
     {
-        // các thông tin chính của user
         public bool ISLOGIN { get; set; } = false;
         public int ID { get; set; }
         public int PERMISSION { get; set; }
@@ -22,22 +21,18 @@ namespace TracNghiemOnline.Common
         {
             try
             {
-                // lấy thông tin của user hiện tại
                 ISLOGIN = (bool)HttpContext.Current.Session[UserSession.ISLOGIN];
                 ID = (int)HttpContext.Current.Session[UserSession.ID];
-                PERMISSION = (int)HttpContext.Current.Session[UserSession.PERMISSION];      // quyền (admin, giáo viên, học sinh)
-                USERNAME = (string)HttpContext.Current.Session[UserSession.USERNAME];       // Tên đăng nhập
+                PERMISSION = (int)HttpContext.Current.Session[UserSession.PERMISSION];
+                USERNAME = (string)HttpContext.Current.Session[UserSession.USERNAME];
                 EMAIL = (string)HttpContext.Current.Session[UserSession.EMAIL];
                 AVATAR = (string)HttpContext.Current.Session[UserSession.AVATAR];
-                NAME = (string)HttpContext.Current.Session[UserSession.NAME];               // Tên thường
-                if(HttpContext.Current.Session[UserSession.TESTCODE] != null)
-                {
-                    TESTCODE = (int)HttpContext.Current.Session[UserSession.TESTCODE];    // lấy mã bài test đang làm
-                }
+                NAME = (string)HttpContext.Current.Session[UserSession.NAME];
+                TESTCODE = (int)HttpContext.Current.Session[UserSession.TESTCODE];
                 TIME = (string)HttpContext.Current.Session[UserSession.TIME];
             } catch(Exception) { }
         }
-        public bool IsLogin()       // ktra đã đăng nhập chưa
+        public bool IsLogin()
         {
             try
             {
@@ -49,11 +44,11 @@ namespace TracNghiemOnline.Common
                 return false;
             }
         }
-        public void Reset()             // Xóa dữ liệu phiên đăng nhập
+        public void Reset()                                                                 // Xóa thông tin đăng nhập
         {
             HttpContext.Current.Session.Clear();
         }
-        public bool IsAdmin()           // ktra có phải admin không
+        public bool IsAdmin()                                                               // Kiểm tra xem có phải admin hay ko
         {
             try
             {
@@ -65,7 +60,7 @@ namespace TracNghiemOnline.Common
                 return false;
             }
         }
-        public bool IsTeacher()         // ktra có phải giáo viên không
+        public bool IsTeacher()
         {
             try
             {
@@ -78,7 +73,7 @@ namespace TracNghiemOnline.Common
                 return false;
             }
         }
-        public bool IsStudent()         // ktra có phải học sinh không
+        public bool IsStudent()
         {
             try
             {
@@ -91,7 +86,7 @@ namespace TracNghiemOnline.Common
                 return false;
             }
         }
-        public bool IsTesting()         // ktra có phải đang làm test không
+        public bool IsTesting()                                                                 // ktra có phải đang có bài thi không
         {
             try
             {

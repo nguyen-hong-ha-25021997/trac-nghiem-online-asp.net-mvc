@@ -10,57 +10,59 @@ namespace TracNghiemOnline.Models
         User user = new User();
         trac_nghiem_onlineEntities db = new trac_nghiem_onlineEntities();
 
-        public void UpdateLastLogin()
+        public void UpdateLastLogin()                                                           // Cập nhật lần đăng nhập gần nhất
         {
             var update = (from x in db.admins where x.id_admin == user.ID select x).Single();
             update.last_login = DateTime.Now;
-            db.SaveChanges();
+            db.SaveChanges();       // Lưu
         }
-        public void UpdateLastSeen(string name,string url)
+        public void UpdateLastSeen(string name,string url)                                      // Cập nhật trang xem gần nhất
         {
             var update = (from x in db.admins where x.id_admin == user.ID select x).Single();
             update.last_seen = name;
             update.last_seen_url = url;
             db.SaveChanges();
         }
-        public Dictionary<string, int> GetDashBoard()
+        public Dictionary<string, int> GetDashBoard()                                           // Đếm sô lượng
         {
             var ListCount = new Dictionary<string, int>();
-            int CountAdmin = db.admins.Count();
+            int CountAdmin = db.admins.Count();                                                 // SL admin
             ListCount.Add("CountAdmin", CountAdmin);
             int CountTeacher = db.teachers.Count();
-            ListCount.Add("CountTeacher", CountTeacher);
+            ListCount.Add("CountTeacher", CountTeacher);                                        // SL giáo viên
             int CountStudent = db.students.Count();
-            ListCount.Add("CountStudent", CountStudent);
+            ListCount.Add("CountStudent", CountStudent);                                        // SL học sinh
             int CountGrade = db.grades.Count();
-            ListCount.Add("CountGrade", CountGrade);
+            ListCount.Add("CountGrade", CountGrade);                                            // SL khóa
             int CountClass = db.classes.Count();
-            ListCount.Add("CountClass", CountClass);
+            ListCount.Add("CountClass", CountClass);                                            // SL lớp
             int CountSpeciality = db.specialities.Count();
-            ListCount.Add("CountSpeciality", CountSpeciality);
+            ListCount.Add("CountSpeciality", CountSpeciality);                                  // SL ngành
             int CountSubject = db.subjects.Count();
-            ListCount.Add("CountSubject", CountSubject);
+            ListCount.Add("CountSubject", CountSubject);                                        // SL môn
             int CountQuestion = db.questions.Count();
-            ListCount.Add("CountQuestion", CountQuestion);
+            ListCount.Add("CountQuestion", CountQuestion);                                      // SL câu hỏi
             int CountTest = db.tests.Count();
-            ListCount.Add("CountTest", CountTest);
+            ListCount.Add("CountTest", CountTest);                                              // SL bài ktra
             return ListCount;
         }
-        public List<admin> GetAdmins()
+        public List<admin> GetAdmins()                                                          // lấy danh sách admin
         {
             return db.admins.ToList();
         }
-        public admin GetAdmin(int id)
+        public admin GetAdmin(int id)                                                           // lấy ra dữ liệu của ng đc chọn
         {
             admin admin = new admin();
             try
             {
-                admin = db.admins.SingleOrDefault(x => x.id_admin == id);
+                admin = db.admins.SingleOrDefault(x => x.id_admin == id);                       // lấy ra các bản ghi bảng admins có id = id truyền vào
             } catch (Exception e) {
                 Console.WriteLine(e);
             }
             return admin;
         }
+
+        // thêm admin vào CSDL
         public bool AddAdmin(string name ,string username, string password, string gender, string email, string birthday)
         {
             var admin = new admin();
@@ -74,8 +76,8 @@ namespace TracNghiemOnline.Models
             admin.birthday = Convert.ToDateTime(birthday);
             try
             {
-                db.admins.Add(admin);
-                db.SaveChanges();
+                db.admins.Add(admin);                                           // thêm
+                db.SaveChanges();                                               // lưu thay đổi
             } catch (Exception e)
             {
                 Console.WriteLine(e);
@@ -83,12 +85,12 @@ namespace TracNghiemOnline.Models
             }
             return true;
         }
-        public bool DeleteAdmin(int id)
+        public bool DeleteAdmin(int id)                                         // xóa admin
         {
             try
             {
                 var delete = (from x in db.admins where x.id_admin == id select x).Single();
-                db.admins.Remove(delete);
+                db.admins.Remove(delete);                                       // xóa
                 db.SaveChanges();
             } catch (Exception e)
             {
@@ -97,6 +99,8 @@ namespace TracNghiemOnline.Models
             }
             return true;
         }
+
+        // sửa thông tin admin trong CSDL
         public bool EditAdmin(int id_admin, string name, string username, string password, string gender, string email, string birthday)
         {
             try
@@ -507,6 +511,8 @@ namespace TracNghiemOnline.Models
                                                select new QuestionViewModel { question = x, subject = s }).ToList();
             return questions;
         }
+
+        // thêm câu hỏi vào CSDL
         public bool AddQuestion(int id_subject, int unit, string content, string img_content, string answer_a, string answer_b, string answer_c, string answer_d, string correct_answer)
         {
             var question = new question();
@@ -559,6 +565,8 @@ namespace TracNghiemOnline.Models
             }
             return question;
         }
+
+        // sửa câu hỏi trong CSDL
         public bool EditQuestion(int id_question, int id_subject, int unit, string content, string img_content, string answer_a, string answer_b, string answer_c, string answer_d, string correct_answer)
         {
             try
@@ -590,7 +598,7 @@ namespace TracNghiemOnline.Models
                                                  select new TestViewModel { test = x, subject = s, status = stt }).ToList();
             return tests;
         }
-        public List<UnitViewModel> GetUnits(int id)
+        public List<UnitViewModel> GetUnits(int id)                                             // lấy các chương theo môn được chọn
         {
             List<UnitViewModel> tests = db.questions
                    .Where(p => p.id_subject == id)
@@ -598,6 +606,8 @@ namespace TracNghiemOnline.Models
                    .Select(g => new UnitViewModel { Unit = g.Key, Total = g.Count() }).ToList();
             return tests;
         }
+
+        // thêm bài thi trong CSDL
         public bool AddTest(string test_name, string password, int test_code, int id_subject, int total_question, int time_to_do, string note)
         {
             var test = new test();
@@ -634,6 +644,8 @@ namespace TracNghiemOnline.Models
             }
             return test;
         }
+
+        // sửa bài thi trong CSDL
         public bool EditTest(int test_code, string test_name, string password, int time_to_do, string note)
         {
             try
@@ -653,6 +665,8 @@ namespace TracNghiemOnline.Models
             }
             return true;
         }
+
+        // sửa trạng thái mở hay đóng của bài thi
         public bool ToggleStatus(int id_test)
         {
             try
@@ -671,14 +685,14 @@ namespace TracNghiemOnline.Models
             }
             return true;
         }
-        public List<question> GetQuestionsByUnit(int id_subject, int unit, int quest_of_unit)
+        public List<question> GetQuestionsByUnit(int id_subject, int unit, int quest_of_unit)           // lấy câu hỏi theo chương đc chọn
         {
             List<question> q = (from x in db.questions
                                 where x.id_subject == id_subject && x.unit == unit
                                 select x).OrderBy(x => Guid.NewGuid()).Take(quest_of_unit).ToList();
             return q;
         }
-        public bool AddQuestionsToTest(int test_code, int id_question)
+        public bool AddQuestionsToTest(int test_code, int id_question)                          // thêm câu hỏi cho bài thi
         {
             var quest_of_test = new quests_of_test();
             quest_of_test.test_code = test_code;
@@ -695,6 +709,8 @@ namespace TracNghiemOnline.Models
             }
             return true;
         }
+
+        // lấy câu hỏi của bài thi được chọn
         public List<question> GetQuestionsOfTest(int test_code)
         {
             List<int> id_quest = (from x in db.quests_of_test

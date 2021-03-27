@@ -1,8 +1,8 @@
 ﻿@using TracNghiemOnline.Models
 @{
     var teacher = Model as teacher;
-    ViewBag.Title = "Sửa Tài Khoản Giảng Viên " + teacher.name;
-    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    ViewBag.Title = "Sửa thông tin cá nhân ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
     var ListSpecialities = ViewBag.ListSpecialities as List<speciality>;
 }
 
@@ -21,7 +21,7 @@
 <div class="content">
     <div class="row">
         <div id="add_normal" class="col s12">
-            @using (Html.BeginForm("EditTeacher", "Admin", FormMethod.Post))
+            @using (Html.BeginForm("EditTeacher", "Teacher", FormMethod.Post))
             {
                 <input type="hidden" id="id_teacher" name="id_teacher" required value="@teacher.id_teacher" class="hidden">
                 <div class="col l6 s12">

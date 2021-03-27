@@ -11,25 +11,27 @@ namespace TracNghiemOnline.Controllers
 {
     public class AdminController : Controller
     {
-        User user = new User();
+        User user = new User();                                                         // Tạo biến lưu thông tin đăng nhập
         // GET: Admin
-        AdminDA Model = new AdminDA();
+        AdminDA Model = new AdminDA();                                                  // Tạo biến lưu Admin
 
         public ActionResult Index()
         {
             if (!user.IsAdmin())
-                return View("Error");
+                return View("Error");                                                   // Nếu không sẽ báo lỗi
+
+            // Nếu đúng
             Model.UpdateLastLogin();
             Model.UpdateLastSeen("Trang Chủ", Url.Action("Index"));
-            Dictionary<string, int> ListCount = Model.GetDashBoard();
-            return View(ListCount);
+            Dictionary<string, int> ListCount = Model.GetDashBoard();                   // Đếm sô lượng
+            return View(ListCount);                                                     // Trả về giao diện số lượng đếm được
         }
         public ActionResult Logout()
         {
             if (!user.IsAdmin())
                 return View("Error");
             user.Reset();
-            return RedirectToAction("Index", "Login");
+            return RedirectToAction("Index", "Login");                                  // Trở về trang login
         }
         public ActionResult AdminManager()
         {
@@ -39,11 +41,12 @@ namespace TracNghiemOnline.Controllers
             return View(Model.GetAdmins());
         }
         [HttpPost]
-        public ActionResult AddAdmin(FormCollection form)
+        public ActionResult AddAdmin(FormCollection form)                               // thêm admin
         {
             if (!user.IsAdmin())
                 return View("Error");
             Model.UpdateLastSeen("Thêm Admin", Url.Action("AddAdmin"));
+            // truyền dữ liệu vào
             string name = form["name"];
             string username = form["username"];
             string password = form["password"];
@@ -61,15 +64,15 @@ namespace TracNghiemOnline.Controllers
                 TempData["status_id"] = false;
                 TempData["status"] = "Thêm Thất Bại";
             }
-            return RedirectToAction("AdminManager");
+            return RedirectToAction("AdminManager");                                        // trở về trang quản lý admin
         }
-        public ActionResult DeleteAdmin(string id)
+        public ActionResult DeleteAdmin(string id)                                          // xóa admin
         {
             if (!user.IsAdmin())
                 return View("Error");
             Model.UpdateLastSeen("Xóa Admin", Url.Action("DeleteAdmin"));
-            int id_admin = Convert.ToInt32(id);
-            bool del = Model.DeleteAdmin(id_admin);
+            int id_admin = Convert.ToInt32(id);                                             // chuyển đổi id truyền vào thành int
+            bool del = Model.DeleteAdmin(id_admin);                                         // xóa admin với id đã truyền vào
             if (del)
             {
                 TempData["status_id"] = true;
@@ -107,7 +110,7 @@ namespace TracNghiemOnline.Controllers
             }
             return RedirectToAction("AdminManager");
         }
-        public ActionResult EditAdmin(string id)
+        public ActionResult EditAdmin(string id)                                            // sửa thông tin admin
         {
             if (!user.IsAdmin())
                 return View("Error");
@@ -116,14 +119,14 @@ namespace TracNghiemOnline.Controllers
             {
                 admin admin = Model.GetAdmin(id_admin);
                 Model.UpdateLastSeen("Sửa Admin " + admin.name, Url.Action("EditAdmin/" + id));
-                return View(admin);
+                return View(admin);                                                         // trả về View dữ liệu lấy được
             } catch(Exception)
             {
                 return View("Error");
             }
         }
         [HttpPost]
-        public ActionResult EditAdmin(FormCollection form)
+        public ActionResult EditAdmin(FormCollection form)                                  // thực thi sửa thông tin admin
         {
             if (!user.IsAdmin())
                 return View("Error");
@@ -145,7 +148,7 @@ namespace TracNghiemOnline.Controllers
                 TempData["status_id"] = false;
                 TempData["status"] = "Sửa Thất Bại";
             }
-            return RedirectToAction("EditAdmin/"+id_admin);
+            return RedirectToAction("EditAdmin/"+id_admin);                                 // trờ về View sửa thông tin admin
         }
         public ActionResult TeacherManager()
         {
@@ -758,6 +761,7 @@ namespace TracNghiemOnline.Controllers
             Model.UpdateLastSeen("Thêm Câu Hỏi", Url.Action("AddQuestion"));
             int id_subject = Convert.ToInt32(form["id_subject"]);
             int unit = Convert.ToInt32(form["unit"]);
+            // truyền vào dữ liệu đáp án
             string content = form["content"];
             string[] answer = new string[] {
                 form["answer_a"],
@@ -770,12 +774,13 @@ namespace TracNghiemOnline.Controllers
             string answer_b = answer[1];
             string answer_c = answer[2];
             string answer_d = answer[3];
+            // truyền vào hình ảnh
             string correct_answer = form["correct_answer"];
             string img_content = "noimage.png";
 
             try
             {
-                string fileName = Path.GetFileName(File.FileName);
+                string fileName = Path.GetFileName(File.FileName);                                  // lấy đường dẫn file
                 //Upload image
                 string path = Server.MapPath("~/Assets/img_questions/");
                 //Đuối hỗ trợ
@@ -954,10 +959,10 @@ namespace TracNghiemOnline.Controllers
             Model.UpdateLastSeen("Thêm Đề Thi", Url.Action("AddTest"));
             //tạo đề thi
             string test_name = form["test_name"];
-            string password = Common.Encryptor.MD5Hash(form["password"]);
+            string password = Common.Encryptor.MD5Hash(form["password"]);                               // mã hóa mật khẩu
             //sinh số test code ngẫu nhiên
             Random rnd = new Random();
-            int test_code = rnd.Next(111111,999999);
+            int test_code = rnd.Next(111111,999999);                                                    // tạo mã thi
             int id_subject = Convert.ToInt32(form["id_subject"]);
             int total_question = Convert.ToInt32(form["total_question"]);
             int time_to_do = Convert.ToInt32(form["time_to_do"]);
@@ -1045,7 +1050,7 @@ namespace TracNghiemOnline.Controllers
             }
             return RedirectToAction("TestManager/" + id_test);
         }
-        public ActionResult TestDetail(string id)
+        public ActionResult TestDetail(string id)                               // lấy thông tin vài thi
         {
             if (!user.IsAdmin())
                 return View("Error");

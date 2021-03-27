@@ -9,8 +9,7 @@ namespace TracNghiemOnline.Common
     {
         static Random _random = new Random();
 
-        // random câu hỏi, câu trả lời
-        public static string[] Randomize(string[] arr)
+        public static string[] Randomize(string[] arr)                              // random
         {
             List<KeyValuePair<int, string>> list =
                 new List<KeyValuePair<int, string>>();
