@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Microsoft.Extensions.Hosting;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using TracNghiemOnline.Common;
@@ -294,7 +296,8 @@ namespace TracNghiemOnline.Models
             {
                 score = (from x in db.scores
                          join s in db.students on x.id_student equals s.id_student
-                         where x.test_code == test_code select new ScoreViewModel { score = x, student = s }).ToList();
+                         join y in db.tests on x.test_code equals y.test_code
+                         where x.test_code == test_code select new ScoreViewModel { score = x, student = s, test = y }).ToList();
             }
             catch (Exception e)
             {

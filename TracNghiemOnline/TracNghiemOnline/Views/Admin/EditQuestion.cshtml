@@ -57,6 +57,10 @@
                         <input class="file-path validate" type="text" placeholder="Chỉ hỗ trợ ảnh đuôi .PNG .png .JPG .jpg">
                     </div>
                 </div>
+                if (!question.img_content.Equals("noimage.png"))
+                {
+                    <br /><img src="~/Assets/img_questions/@question.img_content" style="max-width: 100px; max-height: 100px" />
+                }
                 <div class="input-field">
                     <textarea name="answer_a" id="answer_a" class="materialize-textarea" onchange="get_val(this.id)" required>@question.answer_a</textarea>
                     <label for="answer_a">Đáp Án A <span class="failed">(*)</span></label>

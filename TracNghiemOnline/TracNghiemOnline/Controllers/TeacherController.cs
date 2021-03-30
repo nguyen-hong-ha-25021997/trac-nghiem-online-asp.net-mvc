@@ -1,10 +1,16 @@
-﻿using System;
+﻿using ClosedXML.Excel;
+using OfficeOpenXml;
+using OfficeOpenXml.Table;
+using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.UI;
+using System.Web.UI.WebControls;
 using TracNghiemOnline.Common;
 using TracNghiemOnline.Models;
 namespace TracNghiemOnline.Controllers
@@ -403,6 +409,94 @@ namespace TracNghiemOnline.Controllers
                 return View("Error");
             user.Reset();
             return RedirectToAction("Index", "Login");
+        }
+        //[HttpPost]
+        //public FileResult ExportToExcel(FormCollection form)                        // xuất điểm ra file Excel
+        //{
+        //    int test_code = Convert.ToInt32(form["test_code"]);                     // lấy mã bài test từ form
+        //    DataTable dt = new DataTable("Grid");                                   // tạo datatable để lưu dữ liệu
+        //    dt.Columns.AddRange(new DataColumn[4] { new DataColumn("Tài khoản"),    // thêm các cột vào datatable
+        //                                    new DataColumn("Tên"),
+        //                                    new DataColumn("Lớp"),
+        //                                    new DataColumn("Điểm")});
+        //    var scores = Model.GetListScore(test_code);                             // lấy dữ liệu về điểm với bài thi đc chọn
+        //    // với mỗi bải ghi score của scores add dữ liệu đó vào datatable
+        //    foreach (var score in scores)
+        //    {
+        //        dt.Rows.Add(score.student.username, score.student.name, score.student.@class.class_name, score.score.score_number);
+        //    }
+        //    // xuất dữ liệu trong datatable ra file excel
+        //    using (XLWorkbook wb = new XLWorkbook())
+        //    {
+        //        wb.Worksheets.Add(dt);
+        //        using (MemoryStream stream = new MemoryStream())
+        //        {
+        //            wb.SaveAs(stream);
+        //            return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Grid.xlsx");
+        //        }
+        //    }
+        //}
+
+        [HttpPost]
+        public ActionResult ExportToExcel(int id)                           // xuất điểm ra file Excel
+        {
+            var scores = Model.GetListScore(id);                            // lấy dữ liệu về điểm với bài thi đc chọn
+            // Excel
+            try
+            {
+                DataTable Dt = new DataTable();                             // tạo DataTable để lưu dữ liệu
+                // thêm các cột cho DataTable
+                Dt.Columns.Add("Tài khoản", typeof(string));
+                Dt.Columns.Add("Tên", typeof(string));
+                Dt.Columns.Add("Lớp", typeof(string));
+                Dt.Columns.Add("Điểm", typeof(string));
+                foreach(var data in scores)                                 // với mỗi bản ghi cso trong danh sách điểm
+                {
+                    // lưu dữ liệu bản ghi đó vào 1 dòng
+                    DataRow row = Dt.NewRow();
+                    row[0] = data.student.username;
+                    row[1] = data.student.name;
+                    row[2] = data.student.@class.class_name;
+                    row[3] = data.score.score_number;
+                    Dt.Rows.Add(row);                                       // thêm dòng có dữ liệu vào DataTable
+                }
+                var memoryStream = new MemoryStream();
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial; // cấp phép để sử dụng
+                using (var excelPackage = new ExcelPackage(memoryStream))
+                {
+                    var worksheet = excelPackage.Workbook.Worksheets.Add("Sheet1");
+                    worksheet.Cells["A1"].LoadFromDataTable(Dt, true, TableStyles.None);
+                    worksheet.Cells["A1:AN1"].Style.Font.Bold = true;
+                    worksheet.DefaultRowHeight = 18;
+
+
+                    worksheet.Column(2).Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
+                    worksheet.Column(6).Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+                    worksheet.Column(7).Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+                    worksheet.DefaultColWidth = 20;
+                    worksheet.Column(2).AutoFit();
+                    // lưu trang excel thành session để gọi cho phương thức khác
+                    Session["DownloadExcel_FileManager"] = excelPackage.GetAsByteArray();
+                    return Json("", JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public ActionResult Download()
+        {
+
+            if (Session["DownloadExcel_FileManager"] != null)
+            {
+                byte[] data = Session["DownloadExcel_FileManager"] as byte[];
+                return File(data, "application/octet-stream", "Điểm.xlsx");
+            }
+            else
+            {
+                return new EmptyResult();
+            }
         }
     }
 }

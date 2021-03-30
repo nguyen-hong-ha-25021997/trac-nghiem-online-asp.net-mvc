@@ -1,7 +1,7 @@
 ﻿@using TracNghiemOnline.Models
 @{
     ViewBag.Title = "Danh Sách Điểm Sinh Viên Bài Thi " + ViewBag.test_code + " (" + ViewBag.total + ")";
-    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    Layout = "~/Views/Shared/_Layout.cshtml";
     var List = Model as List<ScoreViewModel>;
 }
 
@@ -10,25 +10,33 @@
 </div>
 <div class="content row col s12">
     <table class="striped centered" id="list-score">
-            <thead>
-                <tr>
-                    <th>Tài Khoản</th>
-                    <th>Tên</th>
-                    <th>Điểm</th>
-                </tr>
-            </thead>
+        <thead>
+            <tr>
+                <th>Tài Khoản</th>
+                <th>Tên</th>
+                <th>Điểm</th>
+            </tr>
+        </thead>
 
-            <tbody>
-                @foreach (var student in List)
-                {
+        <tbody>
+            @foreach (var student in List)
+            {
                 <tr>
                     <td>@student.student.username</td>
                     <td>@student.student.name</td>
                     <td>@student.score.score_number</td>
                 </tr>
-                }
-            </tbody>
-        </table>
+            }
+        </tbody>
+    </table>
+    <br />
+    <br />
+    @*@using (Html.BeginForm("ExportToExcel", "Teacher", FormMethod.Post))
+        {
+            <input type="hidden" id="test_code" name="test_code" required value="@ViewBag.test_code" class="hidden">
+            <input type="submit" value="Export to Excel" class="button" />
+        }*@
+    <button onclick="DownloadExcel()" class="btn  btn-success" style="margin-top:20px;">Excel Export</button>
 </div>
 <script>
     $('#list-score').DataTable({
@@ -49,4 +57,17 @@
         }
     });
     $('select').select();
+</script>
+<script>
+    function DownloadExcel() {
+        $.ajax({
+            type: "POST",
+            data: {id: @ViewBag.test_code},
+            url: "/Teacher/ExportToExcel",
+            cache: false,
+            success: function (data) {
+                window.location = '/Teacher/Download';
+            }
+        });
+    }
 </script>
