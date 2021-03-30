@@ -53,8 +53,8 @@ namespace TracNghiemOnline.Controllers
             string email = form["email"];
             string gender = form["gender"];
             string birthday = form["birthday"];
-            bool add = Model.AddAdmin(name,username,password,gender,email,birthday);
-            if(add)
+            bool add = Model.AddAdmin(name, username, password, gender, email, birthday);
+            if (add)
             {
                 TempData["status_id"] = true;
                 TempData["status"] = "Thêm Thành Công";
@@ -104,13 +104,13 @@ namespace TracNghiemOnline.Controllers
                     TempData["status"] += id_admin.ToString() + ",";
                 }
             }
-            if((bool)TempData["status_id"])
+            if ((bool)TempData["status_id"])
             {
                 TempData["status"] = "Xóa Thành Công";
             }
             return RedirectToAction("AdminManager");
         }
-        public ActionResult EditAdmin(string id)                                            // sửa thông tin admin
+        public ActionResult EditAdmin(string id)                                            // sửa thông tin admin(lấy thông tin cũ)
         {
             if (!user.IsAdmin())
                 return View("Error");
@@ -120,7 +120,8 @@ namespace TracNghiemOnline.Controllers
                 admin admin = Model.GetAdmin(id_admin);
                 Model.UpdateLastSeen("Sửa Admin " + admin.name, Url.Action("EditAdmin/" + id));
                 return View(admin);                                                         // trả về View dữ liệu lấy được
-            } catch(Exception)
+            }
+            catch (Exception)
             {
                 return View("Error");
             }
@@ -148,7 +149,7 @@ namespace TracNghiemOnline.Controllers
                 TempData["status_id"] = false;
                 TempData["status"] = "Sửa Thất Bại";
             }
-            return RedirectToAction("EditAdmin/"+id_admin);                                 // trờ về View sửa thông tin admin
+            return RedirectToAction("EditAdmin/" + id_admin);                                 // trờ về View sửa thông tin admin
         }
         public ActionResult TeacherManager()
         {
@@ -184,7 +185,7 @@ namespace TracNghiemOnline.Controllers
             }
             return RedirectToAction("TeacherManager");
         }
-        public ActionResult DeleteTeacher(string id)
+        public ActionResult DeleteTeacher(string id)                                    // xóa giáo viên
         {
             if (!user.IsAdmin())
                 return View("Error");
@@ -228,7 +229,7 @@ namespace TracNghiemOnline.Controllers
             }
             return RedirectToAction("TeacherManager");
         }
-        public ActionResult EditTeacher(string id)
+        public ActionResult EditTeacher(string id)                                   // sửa thông tin giáo viên(lấy thông tin cũ)
         {
             if (!user.IsAdmin())
                 return View("Error");
@@ -246,7 +247,7 @@ namespace TracNghiemOnline.Controllers
             }
         }
         [HttpPost]
-        public ActionResult EditTeacher(FormCollection form)
+        public ActionResult EditTeacher(FormCollection form)                          // sửa thông tin giáo viên
         {
             if (!user.IsAdmin())
                 return View("Error");
@@ -271,7 +272,7 @@ namespace TracNghiemOnline.Controllers
             }
             return RedirectToAction("EditTeacher/" + id_teacher);
         }
-        public ActionResult StudentManager()
+        public ActionResult StudentManager()                                        // Quản lý học sinh (lấy danh sách trả về view)
         {
             if (!user.IsAdmin())
                 return View("Error");
@@ -281,7 +282,7 @@ namespace TracNghiemOnline.Controllers
             return View(Model.GetStudents());
         }
         [HttpPost]
-        public ActionResult AddStudent(FormCollection form)
+        public ActionResult AddStudent(FormCollection form)                         // thêm học sinh
         {
             if (!user.IsAdmin())
                 return View("Error");
@@ -307,7 +308,7 @@ namespace TracNghiemOnline.Controllers
             }
             return RedirectToAction("StudentManager");
         }
-        public ActionResult DeleteStudent(string id)
+        public ActionResult DeleteStudent(string id)                                    // xóa học sinh
         {
             if (!user.IsAdmin())
                 return View("Error");
@@ -327,7 +328,7 @@ namespace TracNghiemOnline.Controllers
             return RedirectToAction("StudentManager");
         }
         [HttpPost]
-        public ActionResult DeleteStudent(FormCollection form)
+        public ActionResult DeleteStudent(FormCollection form)                          // xóa học sinh
         {
             if (!user.IsAdmin())
                 return View("Error");
@@ -351,7 +352,7 @@ namespace TracNghiemOnline.Controllers
             }
             return RedirectToAction("StudentManager");
         }
-        public ActionResult EditStudent(string id)
+        public ActionResult EditStudent(string id)                                      // sửa thông tin học sinh(lấy thông tin cũ0
         {
             if (!user.IsAdmin())
                 return View("Error");
@@ -370,7 +371,7 @@ namespace TracNghiemOnline.Controllers
             }
         }
         [HttpPost]
-        public ActionResult EditStudent(FormCollection form)
+        public ActionResult EditStudent(FormCollection form)                            // sửa thông tin học sinh
         {
             if (!user.IsAdmin())
                 return View("Error");
@@ -396,7 +397,7 @@ namespace TracNghiemOnline.Controllers
             }
             return RedirectToAction("EditStudent/" + id_student);
         }
-        public ActionResult ClassManager()
+        public ActionResult ClassManager()                                          // quản lý lớp
         {
             if (!user.IsAdmin())
                 return View("Error");
@@ -406,7 +407,7 @@ namespace TracNghiemOnline.Controllers
             return View(Model.GetClassesJoin());
         }
         [HttpPost]
-        public ActionResult AddGrade(FormCollection form)
+        public ActionResult AddGrade(FormCollection form)                           // thêm khóa
         {
             if (!user.IsAdmin())
                 return View("Error");
@@ -426,7 +427,7 @@ namespace TracNghiemOnline.Controllers
             return RedirectToAction("ClassManager");
         }
         [HttpPost]
-        public ActionResult AddClass(FormCollection form)
+        public ActionResult AddClass(FormCollection form)                           // thêm lớp
         {
             if (!user.IsAdmin())
                 return View("Error");
@@ -447,7 +448,7 @@ namespace TracNghiemOnline.Controllers
             }
             return RedirectToAction("ClassManager");
         }
-        public ActionResult DeleteClass(string id)
+        public ActionResult DeleteClass(string id)                                  // xóa lớp
         {
             if (!user.IsAdmin())
                 return View("Error");
@@ -467,7 +468,7 @@ namespace TracNghiemOnline.Controllers
             return RedirectToAction("ClassManager");
         }
         [HttpPost]
-        public ActionResult DeleteClass(FormCollection form)
+        public ActionResult DeleteClass(FormCollection form)                        // xóa lớp
         {
             if (!user.IsAdmin())
                 return View("Error");
@@ -491,7 +492,7 @@ namespace TracNghiemOnline.Controllers
             }
             return RedirectToAction("ClassManager");
         }
-        public ActionResult EditClass(string id)
+        public ActionResult EditClass(string id)                                    // xóa lớp
         {
             if (!user.IsAdmin())
                 return View("Error");
@@ -510,7 +511,7 @@ namespace TracNghiemOnline.Controllers
             }
         }
         [HttpPost]
-        public ActionResult EditClass(FormCollection form)
+        public ActionResult EditClass(FormCollection form)                          // sửa thông tin lớp
         {
             if (!user.IsAdmin())
                 return View("Error");
@@ -531,7 +532,7 @@ namespace TracNghiemOnline.Controllers
             }
             return RedirectToAction("EditClass/" + id_class);
         }
-        public ActionResult SpecialityManager()
+        public ActionResult SpecialityManager()                                     // quản lý ngành
         {
             if (!user.IsAdmin())
                 return View("Error");
@@ -539,7 +540,7 @@ namespace TracNghiemOnline.Controllers
             return View(Model.GetSpecialities());
         }
         [HttpPost]
-        public ActionResult AddSpeciality(FormCollection form)
+        public ActionResult AddSpeciality(FormCollection form)                      // thêm ngành
         {
             if (!user.IsAdmin())
                 return View("Error");
@@ -558,7 +559,7 @@ namespace TracNghiemOnline.Controllers
             }
             return RedirectToAction("SpecialityManager");
         }
-        public ActionResult DeleteSpeciality(string id)
+        public ActionResult DeleteSpeciality(string id)                             // xóa ngành
         {
             if (!user.IsAdmin())
                 return View("Error");
@@ -578,7 +579,7 @@ namespace TracNghiemOnline.Controllers
             return RedirectToAction("SpecialityManager");
         }
         [HttpPost]
-        public ActionResult DeleteSpeciality(FormCollection form)
+        public ActionResult DeleteSpeciality(FormCollection form)                   // xóa ngành
         {
             if (!user.IsAdmin())
                 return View("Error");
@@ -602,7 +603,7 @@ namespace TracNghiemOnline.Controllers
             }
             return RedirectToAction("SpecialityManager");
         }
-        public ActionResult EditSpeciality(string id)
+        public ActionResult EditSpeciality(string id)                               // sửa thông tin ngành(lấy thông tin cũ)
         {
             if (!user.IsAdmin())
                 return View("Error");
@@ -619,7 +620,7 @@ namespace TracNghiemOnline.Controllers
             }
         }
         [HttpPost]
-        public ActionResult EditSpeciality(FormCollection form)
+        public ActionResult EditSpeciality(FormCollection form)                     // sửa thông tin ngành
         {
             if (!user.IsAdmin())
                 return View("Error");
@@ -638,7 +639,7 @@ namespace TracNghiemOnline.Controllers
             }
             return RedirectToAction("EditSpeciality/" + id_speciality);
         }
-        public ActionResult SubjectManager()
+        public ActionResult SubjectManager()                                        // quản lý môn
         {
             if (!user.IsAdmin())
                 return View("Error");
@@ -646,7 +647,7 @@ namespace TracNghiemOnline.Controllers
             return View(Model.GetSubjects());
         }
         [HttpPost]
-        public ActionResult AddSubject(FormCollection form)
+        public ActionResult AddSubject(FormCollection form)                         // thêm môn
         {
             if (!user.IsAdmin())
                 return View("Error");
@@ -665,7 +666,7 @@ namespace TracNghiemOnline.Controllers
             }
             return RedirectToAction("SubjectManager");
         }
-        public ActionResult DeleteSubject(string id)
+        public ActionResult DeleteSubject(string id)                                // xóa môn
         {
             if (!user.IsAdmin())
                 return View("Error");
@@ -685,7 +686,7 @@ namespace TracNghiemOnline.Controllers
             return RedirectToAction("SubjectManager");
         }
         [HttpPost]
-        public ActionResult DeleteSubject(FormCollection form)
+        public ActionResult DeleteSubject(FormCollection form)                      // xóa môn
         {
             if (!user.IsAdmin())
                 return View("Error");
@@ -709,7 +710,7 @@ namespace TracNghiemOnline.Controllers
             }
             return RedirectToAction("SubjectManager");
         }
-        public ActionResult EditSubject(string id)
+        public ActionResult EditSubject(string id)                                  // sửa thông tin môn(lấy thông tin cũ)
         {
             if (!user.IsAdmin())
                 return View("Error");
@@ -726,7 +727,7 @@ namespace TracNghiemOnline.Controllers
             }
         }
         [HttpPost]
-        public ActionResult EditSubject(FormCollection form)
+        public ActionResult EditSubject(FormCollection form)                        // sửa thông tin môn
         {
             if (!user.IsAdmin())
                 return View("Error");
@@ -745,7 +746,7 @@ namespace TracNghiemOnline.Controllers
             }
             return RedirectToAction("EditSubject/" + id_subject);
         }
-        public ActionResult QuestionManager()
+        public ActionResult QuestionManager()                                   // quản lý câu hỏi
         {
             if (!user.IsAdmin())
                 return View("Error");
@@ -754,7 +755,7 @@ namespace TracNghiemOnline.Controllers
             return View(Model.GetQuestions());
         }
         [HttpPost]
-        public ActionResult AddQuestion(FormCollection form, HttpPostedFileBase File)
+        public ActionResult AddQuestion(FormCollection form, HttpPostedFileBase File)           // thêm câu hỏi
         {
             if (!user.IsAdmin())
                 return View("Error");
@@ -802,7 +803,8 @@ namespace TracNghiemOnline.Controllers
                     File.SaveAs(path + img_content);
                 }
 
-            } catch (Exception) { }
+            }
+            catch (Exception) { }
             bool add = Model.AddQuestion(id_subject, unit, content, img_content, answer_a, answer_b, answer_c, answer_d, correct_answer);
             if (add)
             {
@@ -816,7 +818,7 @@ namespace TracNghiemOnline.Controllers
             }
             return RedirectToAction("QuestionManager");
         }
-        public ActionResult DeleteQuestion(string id)
+        public ActionResult DeleteQuestion(string id)                               // xóa câu hỏi
         {
             if (!user.IsAdmin())
                 return View("Error");
@@ -836,7 +838,7 @@ namespace TracNghiemOnline.Controllers
             return RedirectToAction("QuestionManager");
         }
         [HttpPost]
-        public ActionResult DeleteQuestion(FormCollection form)
+        public ActionResult DeleteQuestion(FormCollection form)                     // xóa câu hỏi
         {
             if (!user.IsAdmin())
                 return View("Error");
@@ -860,7 +862,7 @@ namespace TracNghiemOnline.Controllers
             }
             return RedirectToAction("QuestionManager");
         }
-        public ActionResult EditQuestion(string id)
+        public ActionResult EditQuestion(string id)                                 // sửa câu hỏi( lấy thông tin cũ)
         {
             if (!user.IsAdmin())
                 return View("Error");
@@ -878,7 +880,7 @@ namespace TracNghiemOnline.Controllers
             }
         }
         [HttpPost]
-        public ActionResult EditQuestion(FormCollection form, HttpPostedFileBase File)
+        public ActionResult EditQuestion(FormCollection form, HttpPostedFileBase File)      // sửa câu hỏi
         {
             if (!user.IsAdmin())
                 return View("Error");
@@ -940,7 +942,7 @@ namespace TracNghiemOnline.Controllers
             }
             return RedirectToAction("EditQuestion/" + id_question);
         }
-        public ActionResult TestManager()
+        public ActionResult TestManager()                                                   // quản lý bài thi
         {
             if (!user.IsAdmin())
                 return View("Error");
@@ -962,12 +964,12 @@ namespace TracNghiemOnline.Controllers
             string password = Common.Encryptor.MD5Hash(form["password"]);                               // mã hóa mật khẩu
             //sinh số test code ngẫu nhiên
             Random rnd = new Random();
-            int test_code = rnd.Next(111111,999999);                                                    // tạo mã thi
+            int test_code = rnd.Next(111111, 999999);                                                    // tạo mã thi
             int id_subject = Convert.ToInt32(form["id_subject"]);
             int total_question = Convert.ToInt32(form["total_question"]);
             int time_to_do = Convert.ToInt32(form["time_to_do"]);
             string note = "";
-            if (form["note"]!="")
+            if (form["note"] != "")
                 note = form["note"];
             bool add = Model.AddTest(test_name, password, test_code, id_subject, total_question, time_to_do, note);
             if (add)
@@ -982,7 +984,7 @@ namespace TracNghiemOnline.Controllers
                     List<question> list_question = Model.GetQuestionsByUnit(id_subject, unit.Unit, quest_of_unit);
                     foreach (question item in list_question)
                     {
-                        Model.AddQuestionsToTest(test_code,item.id_question);
+                        Model.AddQuestionsToTest(test_code, item.id_question);
                     }
                 }
             }
@@ -993,7 +995,7 @@ namespace TracNghiemOnline.Controllers
             }
             return RedirectToAction("TestManager");
         }
-        public ActionResult EditTest(string id)
+        public ActionResult EditTest(string id)                                         // sửa bài thi(lấy dữ liệu cũ)
         {
             if (!user.IsAdmin())
                 return View("Error");

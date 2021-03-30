@@ -16,13 +16,15 @@ namespace TracNghiemOnline.Models
             update.last_login = DateTime.Now;
             db.SaveChanges();       // Lưu
         }
-        public void UpdateLastSeen(string name,string url)                                      // Cập nhật trang xem gần nhất
+
+        public void UpdateLastSeen(string name, string url)                                      // Cập nhật trang xem gần nhất
         {
             var update = (from x in db.admins where x.id_admin == user.ID select x).Single();
             update.last_seen = name;
             update.last_seen_url = url;
             db.SaveChanges();
         }
+
         public Dictionary<string, int> GetDashBoard()                                           // Đếm sô lượng
         {
             var ListCount = new Dictionary<string, int>();
@@ -46,24 +48,28 @@ namespace TracNghiemOnline.Models
             ListCount.Add("CountTest", CountTest);                                              // SL bài ktra
             return ListCount;
         }
+
         public List<admin> GetAdmins()                                                          // lấy danh sách admin
         {
             return db.admins.ToList();
         }
+
         public admin GetAdmin(int id)                                                           // lấy ra dữ liệu của ng đc chọn
         {
             admin admin = new admin();
             try
             {
                 admin = db.admins.SingleOrDefault(x => x.id_admin == id);                       // lấy ra các bản ghi bảng admins có id = id truyền vào
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 Console.WriteLine(e);
             }
             return admin;
         }
 
         // thêm admin vào CSDL
-        public bool AddAdmin(string name ,string username, string password, string gender, string email, string birthday)
+        public bool AddAdmin(string name, string username, string password, string gender, string email, string birthday)
         {
             var admin = new admin();
             admin.name = name;
@@ -78,13 +84,15 @@ namespace TracNghiemOnline.Models
             {
                 db.admins.Add(admin);                                           // thêm
                 db.SaveChanges();                                               // lưu thay đổi
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 Console.WriteLine(e);
                 return false;
             }
             return true;
         }
+
         public bool DeleteAdmin(int id)                                         // xóa admin
         {
             try
@@ -92,7 +100,8 @@ namespace TracNghiemOnline.Models
                 var delete = (from x in db.admins where x.id_admin == id select x).Single();
                 db.admins.Remove(delete);                                       // xóa
                 db.SaveChanges();
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 Console.WriteLine(e);
                 return false;
@@ -111,25 +120,30 @@ namespace TracNghiemOnline.Models
                 update.email = email;
                 update.gender = gender;
                 update.birthday = Convert.ToDateTime(birthday);
-                if(password != null)
+                if (password != null)
                     update.password = Common.Encryptor.MD5Hash(password);
                 db.SaveChanges();
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 Console.WriteLine(e);
                 return false;
             }
             return true;
         }
-        public List<TeacherViewModel> GetTeachers()
+
+        public List<TeacherViewModel> GetTeachers()                                     // lấy danh sách giáo viên
         {
-            List<TeacherViewModel> teachers = (from x in db.teachers join s in db.specialities on x.id_speciality equals s.id_speciality select new TeacherViewModel{ teacher = x, speciality = s}).ToList();
+            List<TeacherViewModel> teachers = (from x in db.teachers join s in db.specialities on x.id_speciality equals s.id_speciality select new TeacherViewModel { teacher = x, speciality = s }).ToList();
             return teachers;
         }
-        public List<speciality> GetSpecialities()
+
+        public List<speciality> GetSpecialities()                                       // lấy danh sách ngành
         {
             return db.specialities.ToList();
         }
+
+        // thêm giáo viên vào CSDL
         public bool AddTeacher(string name, string username, string password, string gender, string email, string birthday, int id_speciality)
         {
             var teacher = new teacher();
@@ -144,8 +158,8 @@ namespace TracNghiemOnline.Models
             teacher.birthday = Convert.ToDateTime(birthday);
             try
             {
-                db.teachers.Add(teacher);
-                db.SaveChanges();
+                db.teachers.Add(teacher);                                               // thêm
+                db.SaveChanges();                                                       // lưu
             }
             catch (Exception e)
             {
@@ -154,6 +168,7 @@ namespace TracNghiemOnline.Models
             }
             return true;
         }
+
         public bool DeleteTeacher(int id)
         {
             try
@@ -169,18 +184,22 @@ namespace TracNghiemOnline.Models
             }
             return true;
         }
-        public teacher GetTeacher(int id)
+
+        public teacher GetTeacher(int id)                                               // lấy thông tin giáo viên đc chọn
         {
             teacher teacher = new teacher();
             try
             {
                 teacher = db.teachers.SingleOrDefault(x => x.id_teacher == id);
             }
-            catch (Exception e) {
+            catch (Exception e)
+            {
                 Console.WriteLine(e);
             }
             return teacher;
         }
+
+        // sửa thông tin giáo viên trong CSDL
         public bool EditTeacher(int id_teacher, string name, string username, string password, string gender, string email, string birthday, int id_speciality)
         {
             try
@@ -203,11 +222,13 @@ namespace TracNghiemOnline.Models
             }
             return true;
         }
-        public List<@class> GetClasses()
+
+        public List<@class> GetClasses()                                            // lấy danh sách lớp
         {
             return db.classes.ToList();
         }
-        public List<StudentViewModel> GetStudents()
+
+        public List<StudentViewModel> GetStudents()                                 // lấy danh sách học sinh
         {
             List<StudentViewModel> students = (from x in db.students
                                                join s in db.specialities on x.id_speciality equals s.id_speciality
@@ -215,6 +236,8 @@ namespace TracNghiemOnline.Models
                                                select new StudentViewModel { student = x, speciality = s, Class = c }).ToList();
             return students;
         }
+
+        // thêm học sinh vào CSDL
         public bool AddStudent(string name, string username, string password, string gender, string email, string birthday, int id_speciality, int id_class)
         {
             var student = new student();
@@ -240,7 +263,8 @@ namespace TracNghiemOnline.Models
             }
             return true;
         }
-        public bool DeleteStudent(int id)
+
+        public bool DeleteStudent(int id)                                           // xóa học sinh dc chọn trong CSDL
         {
             try
             {
@@ -255,7 +279,8 @@ namespace TracNghiemOnline.Models
             }
             return true;
         }
-        public student GetStudent(int id)
+
+        public student GetStudent(int id)                                           // lấy thông tin học sinh dc chọn trong CSDL
         {
             student student = new student();
             try
@@ -268,6 +293,8 @@ namespace TracNghiemOnline.Models
             }
             return student;
         }
+
+        // sửa thông tin học sinh trong CSDL
         public bool EditStudent(int id_student, string name, string username, string password, string gender, string email, string birthday, int id_speciality, int id_class)
         {
             try
@@ -291,19 +318,21 @@ namespace TracNghiemOnline.Models
             }
             return true;
         }
-        public List<grade> GetGrades()
+
+        public List<grade> GetGrades()                                              // lấy danh sách khóa
         {
             return db.grades.ToList();
         }
-        public List<ClassViewModel> GetClassesJoin()
+
+        public List<ClassViewModel> GetClassesJoin()                                // lấy danh sách lớp xếp theo ngành, khóa
         {
             List<ClassViewModel> classes = (from x in db.classes
-                                               join s in db.specialities on x.id_speciality equals s.id_speciality
-                                               join c in db.grades on x.id_grade equals c.id_grade
-                                               select new ClassViewModel { Class = x, speciality = s, grade = c }).ToList();
+                                            join s in db.specialities on x.id_speciality equals s.id_speciality
+                                            join c in db.grades on x.id_grade equals c.id_grade
+                                            select new ClassViewModel { Class = x, speciality = s, grade = c }).ToList();
             return classes;
         }
-        public bool AddGrade(string grade_name)
+        public bool AddGrade(string grade_name)                                     // thêm khóa
         {
             var grade = new grade();
             grade.grade_name = grade_name;
@@ -319,6 +348,8 @@ namespace TracNghiemOnline.Models
             }
             return true;
         }
+
+        // thêm lớp kèm với khóa, ngành
         public bool AddClass(string class_name, int id_grade, int id_speciality)
         {
             var cl = new @class();
@@ -337,13 +368,13 @@ namespace TracNghiemOnline.Models
             }
             return true;
         }
-        public bool DeleteClass(int id)
+        public bool DeleteClass(int id)                                         // xóa lớp
         {
             try
             {
                 var delete = (from x in db.classes where x.id_class == id select x).Single();
-                db.classes.Remove(delete);
-                db.SaveChanges();
+                db.classes.Remove(delete);                                      // xóa
+                db.SaveChanges();                                               // lưu
             }
             catch (Exception e)
             {
@@ -352,7 +383,7 @@ namespace TracNghiemOnline.Models
             }
             return true;
         }
-        public @class GetClass(int id)
+        public @class GetClass(int id)                                              // lấy thông tin lớp đc chọn
         {
             @class cl = new @class();
             try
@@ -365,6 +396,8 @@ namespace TracNghiemOnline.Models
             }
             return cl;
         }
+
+        // sửa thông tin lớp trong CSDL
         public bool EditClass(int id_class, string class_name, int id_speciality, int id_grade)
         {
             try
@@ -382,7 +415,7 @@ namespace TracNghiemOnline.Models
             }
             return true;
         }
-        public bool AddSpeciality(string speciality_name)
+        public bool AddSpeciality(string speciality_name)                                   // thêm ngành
         {
             var speciality = new speciality();
             speciality.speciality_name = speciality_name;
@@ -398,7 +431,8 @@ namespace TracNghiemOnline.Models
             }
             return true;
         }
-        public bool DeleteSpeciality(int id)
+
+        public bool DeleteSpeciality(int id)                                        // xóa ngành
         {
             try
             {
@@ -413,7 +447,8 @@ namespace TracNghiemOnline.Models
             }
             return true;
         }
-        public speciality GetSpeciality(int id)
+
+        public speciality GetSpeciality(int id)                                     // lấy thông tin ngành đc chọn
         {
             speciality speciality = new speciality();
             try
@@ -426,6 +461,8 @@ namespace TracNghiemOnline.Models
             }
             return speciality;
         }
+
+        // sửa thông tin ngành trong CSDL
         public bool EditSpeciality(int id_speciality, string speciality_name)
         {
             try
@@ -441,11 +478,13 @@ namespace TracNghiemOnline.Models
             }
             return true;
         }
-        public List<subject> GetSubjects()
+
+        public List<subject> GetSubjects()                                          // lấy danh sách môn
         {
             return db.subjects.ToList();
         }
-        public bool AddSubject(string subject_name)
+
+        public bool AddSubject(string subject_name)                                 // thêm môn
         {
             var subject = new subject();
             subject.subject_name = subject_name;
@@ -461,7 +500,8 @@ namespace TracNghiemOnline.Models
             }
             return true;
         }
-        public bool DeleteSubject(int id)
+
+        public bool DeleteSubject(int id)                                       // xóa môn
         {
             try
             {
@@ -476,7 +516,8 @@ namespace TracNghiemOnline.Models
             }
             return true;
         }
-        public subject GetSubject(int id)
+
+        public subject GetSubject(int id)                                       // lấy thông tin môn dc chọn
         {
             subject subject = new subject();
             try
@@ -489,6 +530,8 @@ namespace TracNghiemOnline.Models
             }
             return subject;
         }
+
+        // sửa thông tin môn trong CSDL
         public bool EditSubject(int id_subject, string subject_name)
         {
             try
@@ -504,11 +547,11 @@ namespace TracNghiemOnline.Models
             }
             return true;
         }
-        public List<QuestionViewModel> GetQuestions()
+        public List<QuestionViewModel> GetQuestions()                           // lấy danh sách câu hỏi
         {
             List<QuestionViewModel> questions = (from x in db.questions
-                                               join s in db.subjects on x.id_subject equals s.id_subject
-                                               select new QuestionViewModel { question = x, subject = s }).ToList();
+                                                 join s in db.subjects on x.id_subject equals s.id_subject
+                                                 select new QuestionViewModel { question = x, subject = s }).ToList();
             return questions;
         }
 
@@ -537,7 +580,8 @@ namespace TracNghiemOnline.Models
             }
             return true;
         }
-        public bool DeleteQuestion(int id)
+
+        public bool DeleteQuestion(int id)                                  // xóa câu hỏi
         {
             try
             {
@@ -552,7 +596,8 @@ namespace TracNghiemOnline.Models
             }
             return true;
         }
-        public question GetQuestion(int id)
+
+        public question GetQuestion(int id)                                         // lấy thông tin câu hỏi dc chọn
         {
             question question = new question();
             try
@@ -590,12 +635,12 @@ namespace TracNghiemOnline.Models
             }
             return true;
         }
-        public List<TestViewModel> Tests()
+        public List<TestViewModel> Tests()                              // lấy danh sách bài thi
         {
             List<TestViewModel> tests = (from x in db.tests
-                                                 join s in db.subjects on x.id_subject equals s.id_subject
-                                                 join stt in db.statuses on x.id_status equals stt.id_status
-                                                 select new TestViewModel { test = x, subject = s, status = stt }).ToList();
+                                         join s in db.subjects on x.id_subject equals s.id_subject
+                                         join stt in db.statuses on x.id_status equals stt.id_status
+                                         select new TestViewModel { test = x, subject = s, status = stt }).ToList();
             return tests;
         }
         public List<UnitViewModel> GetUnits(int id)                                             // lấy các chương theo môn được chọn
@@ -631,7 +676,8 @@ namespace TracNghiemOnline.Models
             }
             return true;
         }
-        public test GetTest(int test_code)
+
+        public test GetTest(int test_code)                                          // lấy thông tin bài thi dc chọn
         {
             test test = new test();
             try
@@ -717,11 +763,11 @@ namespace TracNghiemOnline.Models
                                   where x.test_code == test_code
                                   select x.id_question).ToList();
             List<question> list_quest = new List<question>();
-            foreach(int item in id_quest)
+            foreach (int item in id_quest)
             {
                 question q = (from x in db.questions
-                                    where x.id_question == item
-                                    select x).Single();
+                              where x.id_question == item
+                              select x).Single();
                 list_quest.Add(q);
             }
             return list_quest;
