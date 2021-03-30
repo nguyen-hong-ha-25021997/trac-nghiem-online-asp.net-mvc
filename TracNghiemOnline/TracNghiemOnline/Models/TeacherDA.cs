@@ -287,7 +287,7 @@ namespace TracNghiemOnline.Models
             }
             return true;
         }
-        public List<ScoreViewModel> GetListScore(int test_code)
+        public List<ScoreViewModel> GetListScore(int test_code)                         // lấy danh sách điểm
         {
             List<ScoreViewModel> score = new List<ScoreViewModel>();
             try

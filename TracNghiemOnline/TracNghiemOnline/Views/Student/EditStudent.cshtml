@@ -2,13 +2,13 @@
 @{
     var student = Model as student;
     ViewBag.Title = "Sửa Tài Khoản Sinh Viên " + student.name;
-    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    Layout = "~/Views/Shared/_Layout.cshtml";
     var ListClass = ViewBag.ListClass;
     var ListSpecialities = ViewBag.ListSpecialities as List<speciality>;
 }
 
 <div class="title-content">
-    <a class="title" href="@Url.Action("StudentManager")">Quay Lại</a>
+    <a class="title" href="@Url.Action("Index")">Quay Lại</a>
     <span class="title">@ViewBag.Title</span>
     @if (TempData["status_id"] != null && (bool)TempData["status_id"])
     {
@@ -22,7 +22,7 @@
 <div class="content">
     <div class="row">
         <div id="add_normal" class="col s12">
-            @using (Html.BeginForm("EditStudent", "Admin", FormMethod.Post))
+            @using (Html.BeginForm("EditStudent", "Student", FormMethod.Post))
             {
                 <input type="hidden" id="id_student" name="id_student" required value="@student.id_student" class="hidden">
                 <div class="col l6 s12">

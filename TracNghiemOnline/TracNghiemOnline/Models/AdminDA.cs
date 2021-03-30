@@ -10,14 +10,14 @@ namespace TracNghiemOnline.Models
         User user = new User();
         trac_nghiem_onlineEntities db = new trac_nghiem_onlineEntities();
 
-        public void UpdateLastLogin()                                                           // Cập nhật lần đăng nhập gần nhất
+        public void UpdateLastLogin()                                                   // Cập nhật lần đăng nhập gần nhất
         {
             var update = (from x in db.admins where x.id_admin == user.ID select x).Single();
             update.last_login = DateTime.Now;
             db.SaveChanges();       // Lưu
         }
 
-        public void UpdateLastSeen(string name, string url)                                      // Cập nhật trang xem gần nhất
+        public void UpdateLastSeen(string name, string url)                             // Cập nhật trang xem gần nhất
         {
             var update = (from x in db.admins where x.id_admin == user.ID select x).Single();
             update.last_seen = name;
@@ -25,41 +25,41 @@ namespace TracNghiemOnline.Models
             db.SaveChanges();
         }
 
-        public Dictionary<string, int> GetDashBoard()                                           // Đếm sô lượng
+        public Dictionary<string, int> GetDashBoard()                                   // Đếm sô lượng
         {
             var ListCount = new Dictionary<string, int>();
-            int CountAdmin = db.admins.Count();                                                 // SL admin
+            int CountAdmin = db.admins.Count();                                         // SL admin
             ListCount.Add("CountAdmin", CountAdmin);
             int CountTeacher = db.teachers.Count();
-            ListCount.Add("CountTeacher", CountTeacher);                                        // SL giáo viên
+            ListCount.Add("CountTeacher", CountTeacher);                                // SL giáo viên
             int CountStudent = db.students.Count();
-            ListCount.Add("CountStudent", CountStudent);                                        // SL học sinh
+            ListCount.Add("CountStudent", CountStudent);                                // SL học sinh
             int CountGrade = db.grades.Count();
-            ListCount.Add("CountGrade", CountGrade);                                            // SL khóa
+            ListCount.Add("CountGrade", CountGrade);                                    // SL khóa
             int CountClass = db.classes.Count();
-            ListCount.Add("CountClass", CountClass);                                            // SL lớp
+            ListCount.Add("CountClass", CountClass);                                    // SL lớp
             int CountSpeciality = db.specialities.Count();
-            ListCount.Add("CountSpeciality", CountSpeciality);                                  // SL ngành
+            ListCount.Add("CountSpeciality", CountSpeciality);                          // SL ngành
             int CountSubject = db.subjects.Count();
-            ListCount.Add("CountSubject", CountSubject);                                        // SL môn
+            ListCount.Add("CountSubject", CountSubject);                                // SL môn
             int CountQuestion = db.questions.Count();
-            ListCount.Add("CountQuestion", CountQuestion);                                      // SL câu hỏi
+            ListCount.Add("CountQuestion", CountQuestion);                              // SL câu hỏi
             int CountTest = db.tests.Count();
-            ListCount.Add("CountTest", CountTest);                                              // SL bài ktra
+            ListCount.Add("CountTest", CountTest);                                      // SL bài ktra
             return ListCount;
         }
 
-        public List<admin> GetAdmins()                                                          // lấy danh sách admin
+        public List<admin> GetAdmins()                                                  // lấy danh sách admin
         {
             return db.admins.ToList();
         }
 
-        public admin GetAdmin(int id)                                                           // lấy ra dữ liệu của ng đc chọn
+        public admin GetAdmin(int id)                                                   // lấy ra dữ liệu của ng đc chọn
         {
             admin admin = new admin();
             try
             {
-                admin = db.admins.SingleOrDefault(x => x.id_admin == id);                       // lấy ra các bản ghi bảng admins có id = id truyền vào
+                admin = db.admins.SingleOrDefault(x => x.id_admin == id);               // lấy ra các bản ghi bảng admins có id = id truyền vào
             }
             catch (Exception e)
             {
@@ -132,13 +132,13 @@ namespace TracNghiemOnline.Models
             return true;
         }
 
-        public List<TeacherViewModel> GetTeachers()                                     // lấy danh sách giáo viên
+        public List<TeacherViewModel> GetTeachers()                                 // lấy danh sách giáo viên
         {
             List<TeacherViewModel> teachers = (from x in db.teachers join s in db.specialities on x.id_speciality equals s.id_speciality select new TeacherViewModel { teacher = x, speciality = s }).ToList();
             return teachers;
         }
 
-        public List<speciality> GetSpecialities()                                       // lấy danh sách ngành
+        public List<speciality> GetSpecialities()                                   // lấy danh sách ngành
         {
             return db.specialities.ToList();
         }
@@ -158,8 +158,8 @@ namespace TracNghiemOnline.Models
             teacher.birthday = Convert.ToDateTime(birthday);
             try
             {
-                db.teachers.Add(teacher);                                               // thêm
-                db.SaveChanges();                                                       // lưu
+                db.teachers.Add(teacher);                                           // thêm
+                db.SaveChanges();                                                   // lưu
             }
             catch (Exception e)
             {
@@ -185,7 +185,7 @@ namespace TracNghiemOnline.Models
             return true;
         }
 
-        public teacher GetTeacher(int id)                                               // lấy thông tin giáo viên đc chọn
+        public teacher GetTeacher(int id)                                           // lấy thông tin giáo viên đc chọn
         {
             teacher teacher = new teacher();
             try
@@ -383,7 +383,7 @@ namespace TracNghiemOnline.Models
             }
             return true;
         }
-        public @class GetClass(int id)                                              // lấy thông tin lớp đc chọn
+        public @class GetClass(int id)                                          // lấy thông tin lớp đc chọn
         {
             @class cl = new @class();
             try
@@ -415,7 +415,7 @@ namespace TracNghiemOnline.Models
             }
             return true;
         }
-        public bool AddSpeciality(string speciality_name)                                   // thêm ngành
+        public bool AddSpeciality(string speciality_name)                               // thêm ngành
         {
             var speciality = new speciality();
             speciality.speciality_name = speciality_name;

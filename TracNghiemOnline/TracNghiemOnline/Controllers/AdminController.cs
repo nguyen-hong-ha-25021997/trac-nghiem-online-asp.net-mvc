@@ -1012,7 +1012,7 @@ namespace TracNghiemOnline.Controllers
             }
         }
         [HttpPost]
-        public ActionResult EditTest(FormCollection form)
+        public ActionResult EditTest(FormCollection form)                               // sửa bài thi
         {
             if (!user.IsAdmin())
                 return View("Error");
@@ -1039,7 +1039,7 @@ namespace TracNghiemOnline.Controllers
             }
             return RedirectToAction("EditTest/" + test_code);
         }
-        public ActionResult ToggleStatus(int id)
+        public ActionResult ToggleStatus(int id)                                // sửa trạng thái mở hay đóng của bài thi
         {
             if (!user.IsAdmin())
                 return View("Error");
@@ -1052,7 +1052,7 @@ namespace TracNghiemOnline.Controllers
             }
             return RedirectToAction("TestManager/" + id_test);
         }
-        public ActionResult TestDetail(string id)                               // lấy thông tin vài thi
+        public ActionResult TestDetail(string id)                               // lấy thông tin bài thi
         {
             if (!user.IsAdmin())
                 return View("Error");

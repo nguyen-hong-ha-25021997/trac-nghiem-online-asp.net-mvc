@@ -24,6 +24,51 @@ namespace TracNghiemOnline.Controllers
             ViewBag.score = Model.GetStudentTestcode();
             return View(Model.GetDashboard());
         }
+        public ActionResult EditStudent()                                      // sửa thông tin học sinh(lấy thông tin cũ0
+        {
+            if (!user.IsStudent())
+                return View("Error");
+            int id_student = Convert.ToInt32(user.ID);
+            try
+            {
+                student student = Model.GetStudent(id_student);
+                Model.UpdateLastSeen("Sửa Sinh Viên " + student.name, Url.Action("EditStudent/" + user.ID));
+                ViewBag.ListSpecialities = Model.GetSpecialities();
+                ViewBag.ListClass = Model.GetClasses();
+                return View(student);
+            }
+            catch (Exception)
+            {
+                return View("Error");
+            }
+        }
+        [HttpPost]
+        public ActionResult EditStudent(FormCollection form)                            // sửa thông tin học sinh
+        {
+            if (!user.IsStudent())
+                return View("Error");
+            int id_student = Convert.ToInt32(form["id_student"]);
+            string name = form["name"];
+            string username = form["username"];
+            string password = form["password"];
+            string email = form["email"];
+            string gender = form["gender"];
+            string birthday = form["birthday"];
+            int id_speciality = Convert.ToInt32(form["id_speciality"]);
+            int id_class = Convert.ToInt32(form["id_class"]);
+            bool edit = Model.EditStudent(id_student, name, username, password, gender, email, birthday, id_speciality, id_class);
+            if (edit)
+            {
+                TempData["status_id"] = true;
+                TempData["status"] = "Sửa Thành Công";
+            }
+            else
+            {
+                TempData["status_id"] = false;
+                TempData["status"] = "Sửa Thất Bại";
+            }
+            return RedirectToAction("EditStudent/" + id_student);
+        }
         [HttpPost]
         public ActionResult CheckPassword(FormCollection form)                                  // ktra mk bài thi
         {

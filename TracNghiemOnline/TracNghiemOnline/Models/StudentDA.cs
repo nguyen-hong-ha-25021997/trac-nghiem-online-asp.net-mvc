@@ -31,6 +31,51 @@ namespace TracNghiemOnline.Models
                                          select new TestViewModel { test = x, subject = s, status = stt }).ToList();
             return tests;
         }
+        public student GetStudent(int id)                                           // lấy thông tin học sinh dc chọn trong CSDL
+        {
+            student student = new student();
+            try
+            {
+                student = db.students.SingleOrDefault(x => x.id_student == id);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            return student;
+        }
+        public List<speciality> GetSpecialities()                                   // lấy danh sách ngành
+        {
+            return db.specialities.ToList();
+        }
+        public List<@class> GetClasses()                                            // lấy danh sách lớp
+        {
+            return db.classes.ToList();
+        }
+        // sửa thông tin học sinh trong CSDL
+        public bool EditStudent(int id_student, string name, string username, string password, string gender, string email, string birthday, int id_speciality, int id_class)
+        {
+            try
+            {
+                var update = (from x in db.students where x.id_student == id_student select x).Single();
+                update.name = name;
+                update.username = username;
+                update.email = email;
+                update.gender = gender;
+                update.id_speciality = id_speciality;
+                update.id_class = id_class;
+                update.birthday = Convert.ToDateTime(birthday);
+                if (password != null)
+                    update.password = Common.Encryptor.MD5Hash(password);
+                db.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
+            return true;
+        }
         public test GetTest(int test_code)                                                  // lấy bài thi
         {
             test test = new test();
@@ -44,6 +89,8 @@ namespace TracNghiemOnline.Models
             }
             return test;
         }
+
+        // cập nhật trạng thái đang thi và thời gian còn lại
         public void UpdateStatus(int test_code, string time_remaining)
         {
             var update = (from x in db.students where x.id_student == user.ID select x).Single();

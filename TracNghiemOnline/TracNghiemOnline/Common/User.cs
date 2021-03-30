@@ -28,7 +28,10 @@ namespace TracNghiemOnline.Common
                 EMAIL = (string)HttpContext.Current.Session[UserSession.EMAIL];
                 AVATAR = (string)HttpContext.Current.Session[UserSession.AVATAR];
                 NAME = (string)HttpContext.Current.Session[UserSession.NAME];
-                TESTCODE = (int)HttpContext.Current.Session[UserSession.TESTCODE];
+                if(HttpContext.Current.Session[UserSession.TESTCODE] != null)
+                {
+                    TESTCODE = (int)HttpContext.Current.Session[UserSession.TESTCODE];
+                }
                 TIME = (string)HttpContext.Current.Session[UserSession.TIME];
             } catch(Exception) { }
         }
