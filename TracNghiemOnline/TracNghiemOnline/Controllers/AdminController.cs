@@ -7,6 +7,9 @@ using System.Web;
 using System.Web.Mvc;
 using TracNghiemOnline.Models;
 using TracNghiemOnline.Common;
+using System.Data;
+using OfficeOpenXml;
+
 namespace TracNghiemOnline.Controllers
 {
     public class AdminController : Controller
@@ -1067,6 +1070,56 @@ namespace TracNghiemOnline.Controllers
             {
                 return View("Error");
             }
+        }
+        
+        public ActionResult Upload(FormCollection formCollection)
+        {
+            var questionList = new List<question>();                                // tạo 1 danh sách có phần tử có kiểu question
+            if (Request != null)
+            {
+                HttpPostedFileBase file = Request.Files["UploadedFile"];
+                if ((file != null) && (file.ContentLength > 0) && !string.IsNullOrEmpty(file.FileName))
+                {
+                    string fileName = file.FileName;
+                    string fileContentType = file.ContentType;
+                    byte[] fileBytes = new byte[file.ContentLength];
+                    var data = file.InputStream.Read(fileBytes, 0, Convert.ToInt32(file.ContentLength));
+                    ExcelPackage.LicenseContext = LicenseContext.NonCommercial; // cấp phép để sử dụng
+                    using (var package = new ExcelPackage(file.InputStream))
+                    {
+                        // tạo 1 trang tính Excel
+                        var currentSheet = package.Workbook.Worksheets;
+                        var workSheet = currentSheet.First();
+                        var noOfCol = workSheet.Dimension.End.Column;
+                        var noOfRow = workSheet.Dimension.End.Row;
+                        for (int rowIterator = 2; rowIterator <= noOfRow; rowIterator++)    // tạo 1 vòng lặp để lưu dữ liệu từng dòng của Excel
+                        {
+                            var question = new question();                  //tạo 1 biến có kiểu question
+                            // lấy dữ liệu từ excel lưu vào biến vừa tạo(1 biến lưu 1 dữ liệu của 1 dòng Excel)
+                            question.id_question = Convert.ToInt32(workSheet.Cells[rowIterator, 1].Value);
+                            question.id_subject = Convert.ToInt32(workSheet.Cells[rowIterator, 2].Value);
+                            question.unit = Convert.ToInt32(workSheet.Cells[rowIterator, 3].Value);
+                            question.img_content = workSheet.Cells[rowIterator, 4].Value.ToString();
+                            question.content = workSheet.Cells[rowIterator, 5].Value.ToString();
+                            question.answer_a = workSheet.Cells[rowIterator, 6].Value.ToString();
+                            question.answer_b = workSheet.Cells[rowIterator, 7].Value.ToString();
+                            question.answer_c = workSheet.Cells[rowIterator, 8].Value.ToString();
+                            question.answer_d = workSheet.Cells[rowIterator, 9].Value.ToString();
+                            question.correct_answer = workSheet.Cells[rowIterator, 10].Value.ToString();
+                            questionList.Add(question);                                 // lưu biến vào danh sách đã tạo ở trên
+                        }
+                    }
+                }
+            }
+            using (trac_nghiem_onlineEntities trac_nghiem_onlineEntities = new trac_nghiem_onlineEntities())   // gọi đến CSDL
+            {
+                foreach (var item in questionList)                      // tạo vào lặp để xử lý dữ liệu trong danh sách
+                {
+                    trac_nghiem_onlineEntities.questions.Add(item);     // thêm phần tử của danh sách vào bảng
+                }
+                trac_nghiem_onlineEntities.SaveChanges();               // lưu thay đổi
+            }
+            return RedirectToAction("QuestionManager");                 // trả về View quản lý câu hỏi
         }
     }
 }
